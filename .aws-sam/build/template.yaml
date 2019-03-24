@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Outputs:
+  HelloWorldApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
+  LoginToLibraryFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - LoginToLibraryFunction
+      - Arn
+  LoginToLibraryFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value:
+      Fn::GetAtt:
+      - LoginToLibraryFunctionRole
+      - Arn
+Resources:
+  LoginToLibraryFunction:
+    Properties:
+      CodeUri: LoginToLibraryFunction
+      Events:
+        HelloWorld:
+          Properties:
+            Method: get
+            Path: /hello
+          Type: Api
+      Handler: app.lambdaHandler
+      MemorySize: 512
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
